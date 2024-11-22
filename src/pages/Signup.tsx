@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, Key } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -17,7 +19,9 @@ const Signup = () => {
     e.preventDefault();
     try {
       if (otpSent) {
-        // Verify OTP and register user
+        // Show loading toast
+        toast.loading('Verifying OTP...');
+
         const response = await fetch('http://localhost:5000/api/auth/verify-otp-and-register', {
           method: 'POST',
           headers: {
@@ -33,12 +37,13 @@ const Signup = () => {
 
         const data = await response.json();
 
+        // Dismiss loading toast
+        toast.dismiss();
+
         if (response.ok && data.success) {
-          // Using alert with callback to ensure navigation happens after clicking OK
-          alert('Registration successful! Please login.');
-          setTimeout(() => {
-            navigate('/login');
-          }, 100);
+          toast.success('Registration successful! Redirecting to login...', {
+            onClose: () => navigate('/login')
+          });
         } else {
           throw new Error(data.message || 'Registration failed');
         }
@@ -48,14 +53,14 @@ const Signup = () => {
       }
     } catch (error: any) {
       console.error('Error:', error);
-      alert(error.message || 'An error occurred. Please try again.');
+      toast.error(error.message || 'An error occurred. Please try again.');
     }
   };
 
   const sendOtp = async () => {
     try {
-      // Show loading state
-      const loadingToast = alert('Sending OTP...'); // You can replace this with a proper loading indicator
+      // Show loading toast
+      toast.loading('Sending OTP...');
 
       const response = await fetch('http://localhost:5000/api/auth/send-otp', {
         method: 'POST',
@@ -67,17 +72,20 @@ const Signup = () => {
 
       const data = await response.json();
 
+      // Dismiss loading toast
+      toast.dismiss();
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to send OTP');
       }
 
       // Success case
       setOtpSent(true);
-      alert('OTP sent successfully! Please check your email.');
+      toast.success('OTP sent successfully! Please check your email.');
 
     } catch (error: any) {
       console.error('Error sending OTP:', error);
-      alert(error.message || 'Failed to send OTP. Please try again.');
+      toast.error(error.message || 'Failed to send OTP. Please try again.');
       setOtpSent(false);
     }
   };
@@ -107,6 +115,18 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="w-full max-w-md p-8 space-y-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl m-4 border border-orange-100">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Create Account</h2>
         <div>
