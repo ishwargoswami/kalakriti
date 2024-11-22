@@ -34,8 +34,11 @@ const Signup = () => {
         const data = await response.json();
 
         if (response.ok && data.success) {
+          // Using alert with callback to ensure navigation happens after clicking OK
           alert('Registration successful! Please login.');
-          navigate('/login', { replace: true });
+          setTimeout(() => {
+            navigate('/login');
+          }, 100);
         } else {
           throw new Error(data.message || 'Registration failed');
         }
