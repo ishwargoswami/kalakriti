@@ -43,31 +43,68 @@ export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
     
-    // Generate OTP
-    const otp = crypto.randomInt(100000, 999999).toString();
-    otpStore[email] = otp; // Store OTP temporarily
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+    }
 
-    // Send OTP email
+    // Generate 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+    
+    // Store OTP with 5-minute expiration
+    otpStore[email] = {
+      otp,
+      timestamp: Date.now(),
+      expiresIn: 5 * 60 * 1000 // 5 minutes in milliseconds
+    };
+
+    // Gmail configuration
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD
+      }
     });
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    // Send mail first, then respond
+    await transporter.sendMail({
+      from: `"Kalakriti" <${process.env.GMAIL_USER}>`,
       to: email,
-      subject: 'Your OTP Code',
-      text: `Your OTP code is: ${otp}`,
-    };
+      subject: 'Your OTP for Kalakriti Registration',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2>Welcome to Kalakriti!</h2>
+          <p>Your OTP for registration is:</p>
+          <h1 style="color: #EA580C; font-size: 32px;">${otp}</h1>
+          <p>This OTP will expire in 5 minutes.</p>
+          <p>If you didn't request this OTP, please ignore this email.</p>
+        </div>
+      `
+    });
 
-    await transporter.sendMail(mailOptions);
+    // Only send success response after email is sent
+    return res.status(200).json({ 
+      success: true,
+      message: 'OTP sent successfully',
+      expiresIn: '5 minutes'
+    });
 
-    res.status(200).json({ message: 'OTP sent successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Error sending OTP', error: error.message });
+    console.error('Error sending OTP:', error);
+    
+    // Clean up OTP store in case of error
+    if (req.body.email && otpStore[req.body.email]) {
+      delete otpStore[req.body.email];
+    }
+
+    return res.status(500).json({ 
+      success: false,
+      message: 'Failed to send OTP. Please try again.',
+      error: error.message 
+    });
   }
 };
 
@@ -76,27 +113,72 @@ export const verifyOtpAndRegister = async (req, res) => {
   try {
     const { email, otp, name, password } = req.body;
 
-    // Check if OTP matches
-    if (otpStore[email] !== otp) {
-      return res.status(400).json({ message: 'Invalid OTP' });
+    // Check if OTP exists and hasn't expired
+    const storedOTPData = otpStore[email];
+    if (!storedOTPData) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'OTP not found or has expired. Please request a new OTP.' 
+      });
     }
 
-    // Proceed with user registration
+    // Check OTP expiration
+    const now = Date.now();
+    if (now - storedOTPData.timestamp > storedOTPData.expiresIn) {
+      delete otpStore[email]; // Clean up expired OTP
+      return res.status(400).json({ 
+        success: false,
+        message: 'OTP has expired. Please request a new OTP.' 
+      });
+    }
+
+    // Verify OTP
+    if (storedOTPData.otp !== otp) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Invalid OTP' 
+      });
+    }
+
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ 
+        success: false,
+        message: 'User already exists' 
+      });
     }
 
+    // Create new user
     const user = new User({ name, email, password });
     await user.save();
 
-    // Generate token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    // Clean up used OTP
+    delete otpStore[email];
 
-    res.cookie('token', token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
-    res.status(201).json({ message: 'User registered successfully', user });
+    // Generate token
+    const token = jwt.sign(
+      { userId: user._id }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: '7d' }
+    );
+
+    res.status(201).json({ 
+      success: true,
+      message: 'User registered successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
+
   } catch (error) {
-    res.status(500).json({ message: 'Error registering user', error: error.message });
+    res.status(500).json({ 
+      success: false,
+      message: 'Error registering user',
+      error: error.message 
+    });
   }
 };
 // Login user

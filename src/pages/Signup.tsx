@@ -17,28 +17,66 @@ const Signup = () => {
     e.preventDefault();
     try {
       if (otpSent) {
-        // Submit OTP verification and register the user
-        await register(name, email, password, otp);
-        navigate('/login'); // Redirect to login after successful signup
+        // Verify OTP and register user
+        const response = await fetch('http://localhost:5000/api/auth/verify-otp-and-register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            otp: otpValues.join('')
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          alert('Registration successful! Please login.');
+          navigate('/login', { replace: true });
+        } else {
+          throw new Error(data.message || 'Registration failed');
+        }
       } else {
-        // Request OTP for the user
+        // Send OTP
         await sendOtp();
-        setOtpSent(true); // Mark OTP as sent
       }
-    } catch (error) {
-      // Error handling
+    } catch (error: any) {
+      console.error('Error:', error);
+      alert(error.message || 'An error occurred. Please try again.');
     }
   };
 
   const sendOtp = async () => {
-    // Make a request to the backend to send OTP
-    await fetch('/api/send-otp', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    try {
+      // Show loading state
+      const loadingToast = alert('Sending OTP...'); // You can replace this with a proper loading indicator
+
+      const response = await fetch('http://localhost:5000/api/auth/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send OTP');
+      }
+
+      // Success case
+      setOtpSent(true);
+      alert('OTP sent successfully! Please check your email.');
+
+    } catch (error: any) {
+      console.error('Error sending OTP:', error);
+      alert(error.message || 'Failed to send OTP. Please try again.');
+      setOtpSent(false);
+    }
   };
 
   const handleOtpChange = (index: number, value: string) => {
