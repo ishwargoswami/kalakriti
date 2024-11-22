@@ -1,5 +1,6 @@
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 
 // Register new user
 export const register = async (req, res) => {
@@ -29,6 +30,7 @@ export const register = async (req, res) => {
     );
     user.tokens = user.tokens.concat({ token });
     await user.save();
+
     // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
@@ -36,6 +38,31 @@ export const register = async (req, res) => {
       secure: process.env.NODE_ENV === 'production'
     });
 
+    // Send email notification
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', // You can change this to another email service provider
+      auth: {
+        user: process.env.EMAIL_USER, // Email account
+        pass: process.env.EMAIL_PASS // Email password or App password if 2FA enabled
+      }
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Welcome to Our Platform',
+      text: `Hello ${name},\n\nThank you for registering with us! We're excited to have you on board.\n\nBest regards,\nThe Team`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Error sending email:', error);
+      } else {
+        console.log('Email sent:', info.response);
+      }
+    });
+
+    // Respond with user data
     res.status(201).json({
       user: {
         id: user._id,
@@ -43,6 +70,7 @@ export const register = async (req, res) => {
         email: user.email
       }
     });
+
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
