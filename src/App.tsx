@@ -26,6 +26,8 @@ import ReturnPolicy from './pages/ReturnPolicy';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
+import UserProfile from './pages/UserProfile';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App: React.FC = () => {
   return (
@@ -51,12 +53,27 @@ const App: React.FC = () => {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/shipping-policy" element={<ShippingPolicy />} />
                   <Route path="/return-policy" element={<ReturnPolicy />} />
-                  <Route path="/profileinfo" element={<ProfileInfo />} />
+                  <Route
+                    path="/profileinfo"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileInfo />
+                      </ProtectedRoute>
+                    }
+                  />
                   <Route path="/addressbook" element={<AddressBook/>} />
                   <Route path="/notification" element={<NotificationSettings/>} />
                   <Route path="/orderhistory" element={<OrderHistory />} />
                   <Route path="/payment" element={<PaymentMethod />} />
                   <Route path="/recommendations" element={<Recommendations/>} />
+                  <Route
+                    path="/user-profile"
+                    element={
+                      <ProtectedRoute>
+                        <UserProfile />
+                      </ProtectedRoute>
+                    }
+                  />
                 </Routes>
               </main>
               <Footer />

@@ -2,8 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Search, Menu, X, User, Heart } from 'lucide-react';
 import SearchModal from './SearchModal';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
 
 const Navbar = () => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    if (isAuthenticated) {
+      navigate('/user-profile');
+    } else {
+      navigate('/login');
+    }
+  };
+
   const [isOpen, setIsOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
@@ -14,34 +28,74 @@ const Navbar = () => {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/" className="flex items-center">
-                <span className="text-2xl font-bold text-primary-600 font-sanskrit">कलाकृति</span>
-                <span className="ml-2 text-lg text-gray-600">Kalakriti</span>
+                <span
+                  className="text-2xl font-bold text-primary-600 font-sanskrit"
+                  style={{ color: "#283618" }}
+                >
+                  कलाकृति
+                </span>
+
+                <span
+                  className="ml-2 text-sm text-gray-500 italic font-tagline"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    marginTop: "0.5rem",
+                    marginLeft: "0.1rem"
+                  }}
+                >
+                  Vocal for Local
+                </span>
               </Link>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/products" className="text-gray-600 hover:text-primary-600">Products</Link>
-              <Link to="/blog" className="text-gray-600 hover:text-primary-600">Blog</Link>
-              <Link to="/about" className="text-gray-600 hover:text-primary-600">About</Link>
-              <Link to="/contact" className="text-gray-600 hover:text-primary-600">Contact</Link>
-              <Link to="/faq" className="text-gray-600 hover:text-primary-600">FAQ</Link>
+              <Link
+                to="/products"
+                className="text-gray-600 hover:text-primary-600"
+              >
+                Products
+              </Link>
+              <Link to="/blog" className="text-gray-600 hover:text-primary-600">
+                Blog
+              </Link>
+              <Link
+                to="/about"
+                className="text-gray-600 hover:text-primary-600"
+              >
+                About
+              </Link>
+              <Link
+                to="/contact"
+                className="text-gray-600 hover:text-primary-600"
+              >
+                Contact
+              </Link>
+              <Link to="/faq" className="text-gray-600 hover:text-primary-600">
+                FAQ
+              </Link>
               <div className="flex items-center space-x-4">
-                <button 
+                <button
                   onClick={() => setIsSearchOpen(true)}
                   className="text-gray-600 hover:text-primary-600"
                 >
                   <Search size={20} />
                 </button>
-                <Link to="/wishlist" className="text-gray-600 hover:text-primary-600">
+                <Link
+                  to="/wishlist"
+                  className="text-gray-600 hover:text-primary-600"
+                >
                   <Heart size={20} />
                 </Link>
-                <Link to="/cart" className="text-gray-600 hover:text-primary-600">
+                <Link
+                  to="/cart"
+                  className="text-gray-600 hover:text-primary-600"
+                >
                   <ShoppingBag size={20} />
                 </Link>
-                <Link to="/login" className="text-gray-600 hover:text-primary-600">
-                  <User size={20} />
-                </Link>
+                <div onClick={handleProfileClick}>
+                  <FaUserCircle className="text-2xl cursor-pointer" />
+                </div>
               </div>
             </div>
 
@@ -114,7 +168,10 @@ const Navbar = () => {
           </div>
         )}
       </nav>
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </>
   );
 };

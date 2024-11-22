@@ -7,20 +7,23 @@ import 'swiper/css/pagination';
 
 const slides = [
   {
-    image: 'https://images.unsplash.com/photo-1507034589631-9433cc6bc453?auto=format&fit=crop&q=80',
-    title: 'Traditional Handicrafts',
-    description: 'Discover the beauty of Indian artistry'
+    image:
+      "https://abirpothi.com/wp-content/uploads/2024/05/Courtesy-Craftam.jpg",
+    title: "Traditional Handicrafts",
+    description: "Discover the beauty of Indian artistry",
   },
   {
-    image: 'https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&q=80',
-    title: 'Handwoven Textiles',
-    description: 'Each thread tells a story'
+    image:
+      "https://img.freepik.com/premium-photo/collection-hand-woven-textiles-from-tribe_1064589-10478.jpg",
+    title: "Handwoven Textiles",
+    description: "Each thread tells a story",
   },
   {
-    image: 'https://images.unsplash.com/photo-1610105174465-c9337ee26685?auto=format&fit=crop&q=80',
-    title: 'Pottery Collection',
-    description: 'Crafted with love and tradition'
-  }
+    image:
+      "https://twpottery.ca/wp-content/uploads/2024/03/Website-Banner-Bud-Vase-1.jpeg",
+    title: "Pottery Collection",
+    description: "Crafted with love and tradition",
+  },
 ];
 
 const ImageSlider = () => {

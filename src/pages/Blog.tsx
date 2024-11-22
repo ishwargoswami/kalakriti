@@ -6,31 +6,37 @@ const Blog = () => {
   const blogPosts = [
     {
       id: 1,
-      title: 'The Art of Traditional Indian Pottery',
-      excerpt: 'Discover the ancient techniques and cultural significance behind Indian pottery making...',
-      image: 'https://images.unsplash.com/photo-1610105174465-c9337ee26685?auto=format&fit=crop&q=80',
-      date: 'March 15, 2024',
-      author: 'Priya Sharma',
-      category: 'Crafts'
+      title: "The Art of Traditional Indian Pottery",
+      excerpt:
+        "Discover the ancient techniques and cultural significance behind Indian pottery making...",
+      image:
+        "https://images.squarespace-cdn.com/content/v1/625a6c789b6f1b4ea88e3fdb/1685616218576-FDE45AA7VDJPR92SSXT0/ceramics+on+a+dresser.png",
+      date: "March 15, 2024",
+      author: "Priya Sharma",
+      category: "Crafts",
     },
     {
       id: 2,
-      title: 'Preserving Heritage: Indian Textile Traditions',
-      excerpt: 'Exploring the rich history and techniques of traditional Indian textile weaving...',
-      image: 'https://images.unsplash.com/photo-1606744888344-493238951221?auto=format&fit=crop&q=80',
-      date: 'March 12, 2024',
-      author: 'Rahul Verma',
-      category: 'Textiles'
+      title: "Preserving Heritage: Indian Textile Traditions",
+      excerpt:
+        "Exploring the rich history and techniques of traditional Indian textile weaving...",
+      image:
+        "https://blog.lio.io/wp-content/uploads/2022/03/Blogs-Images-53.jpg",
+      date: "March 12, 2024",
+      author: "Rahul Verma",
+      category: "Textiles",
     },
     {
       id: 3,
-      title: 'The Stories Behind Indian Jewelry',
-      excerpt: 'Each piece of traditional Indian jewelry tells a unique story of culture and craftsmanship...',
-      image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80',
-      date: 'March 10, 2024',
-      author: 'Anita Desai',
-      category: 'Jewelry'
-    }
+      title: "The Stories Behind Indian Jewelry",
+      excerpt:
+        "Each piece of traditional Indian jewelry tells a unique story of culture and craftsmanship...",
+      image:
+        "https://www.vummidi.com/blog/wp-content/uploads/2024/06/Diamond-Timeless-Beauty.jpg",
+      date: "March 10, 2024",
+      author: "Anita Desai",
+      category: "Jewelry",
+    },
   ];
 
   return (
