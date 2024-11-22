@@ -2,8 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Search, Menu, X, User, Heart } from 'lucide-react';
 import SearchModal from './SearchModal';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
 
 const Navbar = () => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    if (isAuthenticated) {
+      navigate('/user-profile');
+    } else {
+      navigate('/login');
+    }
+  };
+
   const [isOpen, setIsOpen] = React.useState(false);
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
@@ -79,12 +93,9 @@ const Navbar = () => {
                 >
                   <ShoppingBag size={20} />
                 </Link>
-                <Link
-                  to="/login"
-                  className="text-gray-600 hover:text-primary-600"
-                >
-                  <User size={20} />
-                </Link>
+                <div onClick={handleProfileClick}>
+                  <FaUserCircle className="text-2xl cursor-pointer" />
+                </div>
               </div>
             </div>
 
