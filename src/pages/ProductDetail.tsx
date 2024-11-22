@@ -8,39 +8,75 @@ import { useWishlist } from '../context/WishlistContext';
 const PRODUCTS = [
   {
     id: 1,
-    name: 'Traditional Clay Vase',
+    name: "Traditional Clay Vase",
     price: 2499,
-    category: 'Pottery',
-    image: 'https://images.unsplash.com/photo-1610105174465-c9337ee26685'
+    category: "Pottery",
+    image:
+      "https://m.media-amazon.com/images/I/61hu+uVVvJL._AC_UF894,1000_QL80_.jpg",
   },
   {
     id: 2,
-    name: 'Handwoven Silk Scarf',
+    name: "Handwoven Silk Scarf",
     price: 3999,
-    category: 'Textiles',
-    image: 'https://images.unsplash.com/photo-1606744888344-493238951221'
+    category: "Textiles",
+    image:
+      "https://www.holyweaves.com/cdn/shop/files/SCF-4534300701-PRL.jpg?v=1715188399&width=2048",
   },
   {
     id: 3,
-    name: 'Silver Anklet',
+    name: "Silver Anklet",
     price: 1999,
-    category: 'Jewelry',
-    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338'
+    category: "Jewelry",
+    image:
+      "https://www.miabytanishq.com/dw/image/v2/BKCK_PRD/on/demandware.static/-/Sites-Tanishq-product-catalog/default/dw082ed6eb/images/hi-res/4019LOR_4.jpg?sw=640&sh=640",
   },
   {
     id: 4,
-    name: 'Madhubani Painting',
+    name: "Madhubani Painting",
     price: 5999,
-    category: 'Paintings',
-    image: 'https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2'
+    category: "Paintings",
+    image:
+      "https://i.pinimg.com/originals/3b/fd/b6/3bfdb6aaeff834ad6a79dba30b271681.jpg",
   },
   {
     id: 5,
-    name: 'Brass Lamp',
+    name: "Brass Lamp",
     price: 3499,
-    category: 'Home Decor',
-    image: 'https://images.unsplash.com/photo-1590736704728-f4730bb30770'
-  }
+    category: "Home Decor",
+    image:
+      "https://theindiacrafthouse.com/cdn/shop/products/Traditional_20Brass_20Oil_20Lamp_20-_20Peacock_20-_20BD01A_202@2x.jpg",
+  },
+  {
+    id: 6,
+    name: "Cotton Bedspread",
+    price: 4499,
+    category: "Textiles",
+    image:
+      "https://m.media-amazon.com/images/I/71x8cAMQZAL._AC_UF894,1000_QL80_.jpg",
+  },
+  {
+    id: 7,
+    name: "Ceramic Bowl Set",
+    price: 2999,
+    category: "Pottery",
+    image:
+      "https://assets.ajio.com/medias/sys_master/root/20231120/YjT9/655b8da5ddf77915198fdbdc/-1117Wx1400H-466814276-blue-MODEL.jpg",
+  },
+  {
+    id: 8,
+    name: "Gold Plated Necklace",
+    price: 6999,
+    category: "Jewelry",
+    image:
+      "https://www.tanishq.co.in/dw/image/v2/BKCK_PRD/on/demandware.static/-/Sites-Tanishq-product-catalog/default/dw67432ac1/images/hi-res/5110692ZWAAA00_1.jpg?sw=640&sh=640",
+  },
+  {
+    id: 9,
+    name: "Decorative Wall Hanging",
+    price: 1999,
+    category: "Home Decor",
+    image: "https://m.media-amazon.com/images/I/71nFcZ0nXXL.jpg",
+  },
 ];
 
 const ProductDetail = () => {

@@ -13,10 +13,10 @@ const ReturnPolicy = () => {
           <div className="bg-orange-50 rounded-lg p-6">
             <div className="flex items-center space-x-3 mb-4">
               <Clock className="w-6 h-6 text-orange-600" />
-              <h3 className="text-lg font-medium">30-Day Return Policy</h3>
+              <h3 className="text-lg font-medium">07-Day Return Policy</h3>
             </div>
             <p className="text-gray-600">
-              We accept returns within 30 days of delivery. The item must be unused,
+              We accept returns within 07 days of delivery. The item must be unused,
               in its original packaging, and in the same condition as received.
             </p>
           </div>
@@ -106,7 +106,7 @@ const ReturnPolicy = () => {
               support@kalakriti.com
             </a>
             <br />
-            <span className="text-gray-600">+91 123 456 7890</span>
+            <span className="text-gray-600">+91 *** *** 7661</span>
           </p>
         </section>
       </div>

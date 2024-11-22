@@ -21,8 +21,8 @@ const Contact = () => {
               <div>
                 <h3 className="font-medium">Address</h3>
                 <p className="text-gray-600">
-                  123 Craft Street,<br />
-                  Jaipur, Rajasthan 302001<br />
+                  CHARUSAT UNIVERSITY,<br />
+                  Anand, Gujarat 388421<br />
                   India
                 </p>
               </div>
@@ -31,7 +31,7 @@ const Contact = () => {
               <Phone className="w-6 h-6 text-orange-600 mt-1" />
               <div>
                 <h3 className="font-medium">Phone</h3>
-                <p className="text-gray-600">+91 123 456 7890</p>
+                <p className="text-gray-600">+91 *** *** 7661</p>
               </div>
             </div>
             <div className="flex items-start space-x-4">
