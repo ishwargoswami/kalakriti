@@ -1,7 +1,32 @@
-import React from 'react';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import React, { useState } from "react";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 const Contact = () => {
+  const [result, setResult] = useState("");
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    setResult("Sending...");
+    const formData = new FormData(event.target);
+
+    formData.append("access_key", "d83b4a79-7a02-4382-a5b2-d0eccc81afbe");
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setResult("Form Submitted Successfully");
+      event.target.reset();
+    } else {
+      console.error("Error", data);
+      setResult(data.message);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
@@ -56,7 +81,9 @@ const Contact = () => {
 
         {/* Contact Form */}
         <div className="lg:col-span-2 bg-white p-8 rounded-lg shadow-sm">
-          <form className="space-y-6">
+          <form onSubmit={onSubmit} className="space-y-6">
+            <input type="hidden" name="access_key" value="d83b4a79-7a02-4382-a5b2-d0eccc81afbe" />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -65,6 +92,8 @@ const Contact = () => {
                 <input
                   type="text"
                   id="name"
+                  name="name"
+                  required
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
                 />
               </div>
@@ -75,6 +104,8 @@ const Contact = () => {
                 <input
                   type="email"
                   id="email"
+                  name="email"
+                  required
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
                 />
               </div>
@@ -86,6 +117,8 @@ const Contact = () => {
               <input
                 type="text"
                 id="subject"
+                name="subject"
+                required
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
               />
             </div>
@@ -95,7 +128,9 @@ const Contact = () => {
               </label>
               <textarea
                 id="message"
+                name="message"
                 rows={6}
+                required
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
               ></textarea>
             </div>
@@ -106,6 +141,7 @@ const Contact = () => {
               Send Message
             </button>
           </form>
+          <p className="mt-4 text-center text-sm text-gray-600">{result}</p>
         </div>
       </div>
     </div>
