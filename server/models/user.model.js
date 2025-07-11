@@ -27,6 +27,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  notificationSettings: {
+    emailNotifications: { type: Boolean, default: true },
+    smsNotifications: { type: Boolean, default: false },
+    orderUpdates: { type: Boolean, default: true },
+    promotions: { type: Boolean, default: true },
+    newsletter: { type: Boolean, default: true },
+    productUpdates: { type: Boolean, default: false }
+  },
   tokens: [{ token: { type: String } }],
 }, {
   timestamps: true

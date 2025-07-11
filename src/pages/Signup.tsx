@@ -41,6 +41,8 @@ const Signup = () => {
         toast.dismiss();
 
         if (response.ok && data.success) {
+           console.log('✅ Registered User ID:', data.user.id);
+          localStorage.setItem('userId', data.user.id); // ✅ Save after register
           toast.success('Registration successful! Redirecting to login...', {
             onClose: () => navigate('/login')
           });

@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 
 import crypto from 'crypto';
+import dotenv from 'dotenv';
+dotenv.config();
 const otpStore = {}; 
 // OTP generation and email sending
 export const register = async (req, res) => {
@@ -42,7 +44,8 @@ export const register = async (req, res) => {
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
-    
+
+    // Validate email presence
     if (!email) {
       return res.status(400).json({
         success: false,
@@ -52,25 +55,28 @@ export const sendOtp = async (req, res) => {
 
     // Generate 6-digit OTP
     const otp = crypto.randomInt(100000, 999999).toString();
-    
-    // Store OTP with 5-minute expiration
+
+    // Store OTP with 5-minute expiration timestamp
     otpStore[email] = {
       otp,
       timestamp: Date.now(),
       expiresIn: 5 * 60 * 1000 // 5 minutes in milliseconds
     };
 
-    // Gmail configuration
+    // Gmail transporter configuration
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD
-      }
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false, // To avoid issues with Gmail's certificate
+      },
     });
 
-    // Send mail first, then respond
-    await transporter.sendMail({
+    // Email options
+    const mailOptions = {
       from: `"Kalakriti" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: 'Your OTP for Kalakriti Registration',
@@ -82,32 +88,34 @@ export const sendOtp = async (req, res) => {
           <p>This OTP will expire in 5 minutes.</p>
           <p>If you didn't request this OTP, please ignore this email.</p>
         </div>
-      `
-    });
+      `,
+    };
 
-    // Only send success response after email is sent
-    return res.status(200).json({ 
+    // Send the email with OTP
+    await transporter.sendMail(mailOptions);
+
+    // Send success response
+    return res.status(200).json({
       success: true,
       message: 'OTP sent successfully',
-      expiresIn: '5 minutes'
+      expiresIn: '5 minutes',
     });
 
   } catch (error) {
     console.error('Error sending OTP:', error);
-    
-    // Clean up OTP store in case of error
+
+    // In case of error, clear the OTP store for that email
     if (req.body.email && otpStore[req.body.email]) {
       delete otpStore[req.body.email];
     }
 
-    return res.status(500).json({ 
+    return res.status(500).json({
       success: false,
       message: 'Failed to send OTP. Please try again.',
-      error: error.message 
+      error: error.message,
     });
   }
 };
-
 // Verify OTP before registration
 export const verifyOtpAndRegister = async (req, res) => {
   try {
@@ -242,5 +250,32 @@ export const getCurrentUser = async (req, res) => {
     res.json({ user });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+export const getNotificationSettings = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).select('notificationSettings');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user.notificationSettings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateNotificationSettings = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.userId,
+      { notificationSettings: req.body },
+      { new: true }
+    ).select('notificationSettings');
+
+    res.json({
+      message: 'Settings updated',
+      notificationSettings: user.notificationSettings
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
